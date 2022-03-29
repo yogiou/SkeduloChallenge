@@ -4,7 +4,6 @@
 2. Install Maven 3.8.1 or above
 3. Go to project root directory
 4. Run "mvn install"
-5. Run "mvn package"
 6. Run command "java -jar ./target/SkeduloChallenge-0.0.1-SNAPSHOT.jar [input file]"
 
 **Thought process behind the solution and the design decisions**
