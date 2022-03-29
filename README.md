@@ -1,8 +1,10 @@
 
 **How to run? (Assume it is Linux or Mac system)**
-1. Install Java 11 above
-2. Go to project root directory
-3. Run command "java -jar SkeduloChallenge-0.0.1-SNAPSHOT.jar [input file]"
+1. Install Java 11 or above
+2. Install Maven 3.8.1 or above
+3. Go to project root directory
+4. Run "mvn package"
+5. Run command "java -jar ./target/SkeduloChallenge-0.0.1-SNAPSHOT.jar [input file]"
 
 **Thought process behind the solution and the design decisions**
 
