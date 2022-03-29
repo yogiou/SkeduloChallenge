@@ -2,7 +2,7 @@
 **How to run? (Assume it is Linux or Mac system)**
 1. Install Java 11 above
 2. Go to project root directory
-3. Run command "java -jar ./target/SkeduloChallenge-0.0.1-SNAPSHOT.jar [input file]"
+3. Run command "java -jar SkeduloChallenge-0.0.1-SNAPSHOT.jar [input file]"
 
 **Thought process behind the solution and the design decisions**
 
