@@ -469,4 +469,157 @@ internal class FindBestPerformanceListServiceImplTest {
             Assertions.assertEquals(expected[i].finish, result[i].finish)
         }
     }
+
+    @Test
+    fun findBestPerformanceLis7() {
+        val performance1 = Performance("Pearl Jam", 2, "2018-05-25T00:01:15Z", "2018-05-25T00:03:30Z")
+        val performance2 = Performance("Pearl Jam1", 3, "2018-05-25T00:09:00Z", "2018-05-25T00:10:30Z")
+        val performance4 = Performance("Pearl Jam3", 5, "2018-05-25T00:20:00Z", "2018-05-25T00:26:30Z")
+        val performanceM = Performance("Pearl Jam4", 1, "2018-05-25T00:38:20Z", "2018-05-25T00:59:30Z")
+
+        val list = mutableListOf<Performance>()
+        list.add(performance1)
+        list.add(performance2)
+        list.add(performance4)
+        list.add(performanceM)
+
+        val result = findBestPerformanceListService.findBestPerformanceList(list)
+
+        val expected = mutableListOf<Performance>()
+
+        val performance5 = Performance("Pearl Jam", 2, "2018-05-25T00:01:15Z", "2018-05-25T00:03:30Z")
+        val performance6 = Performance("Pearl Jam1", 3, "2018-05-25T00:09:00Z", "2018-05-25T00:10:30Z")
+        val performance7 = Performance("Pearl Jam3", 5, "2018-05-25T00:20:00Z", "2018-05-25T00:26:30Z")
+        val performanceN = Performance("Pearl Jam4", 1, "2018-05-25T00:38:20Z", "2018-05-25T00:59:30Z")
+
+        expected.add(performance5)
+        expected.add(performance6)
+        expected.add(performance7)
+        expected.add(performanceN)
+
+        Assertions.assertEquals(expected.size, result.size)
+
+        for (i in 0 until result.size) {
+            Assertions.assertEquals(expected[i].band, result[i].band)
+            Assertions.assertEquals(expected[i].priority, result[i].priority)
+            Assertions.assertEquals(expected[i].start, result[i].start)
+            Assertions.assertEquals(expected[i].finish, result[i].finish)
+        }
+    }
+
+    @Test
+    fun findBestPerformanceLis8() {
+        val performance1 = Performance("Pearl Jam", 2, "2018-05-25T00:01:15Z", "2018-05-25T00:03:30Z")
+        val performance2 = Performance("Pearl Jam1", 1, "2018-05-25T00:02:00Z", "2018-05-25T00:10:30Z")
+        val performance4 = Performance("Pearl Jam3", 3, "2018-05-25T00:04:00Z", "2018-05-25T00:05:30Z")
+        val performance3 = Performance("Pearl Jam4", 5, "2018-05-25T00:07:20Z", "2018-05-25T00:09:30Z")
+        val performanceM = Performance("Pearl Jam5", 10, "2018-05-25T00:27:20Z", "2018-05-25T00:49:30Z")
+
+        val list = mutableListOf<Performance>()
+        list.add(performance1)
+        list.add(performance2)
+        list.add(performance4)
+        list.add(performance3)
+        list.add(performanceM)
+
+        val result = findBestPerformanceListService.findBestPerformanceList(list)
+
+        val expected = mutableListOf<Performance>()
+
+        val performance5 = Performance("Pearl Jam", 2, "2018-05-25T00:01:15Z", "2018-05-25T00:03:30Z")
+        val performance6 = Performance("Pearl Jam1", 1, "2018-05-25T00:03:30Z", "2018-05-25T00:04:00Z")
+        val performance7 = Performance("Pearl Jam3", 3, "2018-05-25T00:04:00Z", "2018-05-25T00:05:30Z")
+        val performance8 = Performance("Pearl Jam1", 1, "2018-05-25T00:05:30Z", "2018-05-25T00:07:20Z")
+        val performance9 = Performance("Pearl Jam4", 5, "2018-05-25T00:07:20Z", "2018-05-25T00:09:30Z")
+        val performance10 = Performance("Pearl Jam1", 1, "2018-05-25T00:09:30Z", "2018-05-25T00:10:30Z")
+        val performance11 = Performance("Pearl Jam5", 10, "2018-05-25T00:27:20Z", "2018-05-25T00:49:30Z")
+
+        expected.add(performance5)
+        expected.add(performance6)
+        expected.add(performance7)
+        expected.add(performance8)
+        expected.add(performance9)
+        expected.add(performance10)
+        expected.add(performance11)
+
+        Assertions.assertEquals(expected.size, result.size)
+
+        for (i in 0 until result.size) {
+            Assertions.assertEquals(expected[i].band, result[i].band)
+            Assertions.assertEquals(expected[i].priority, result[i].priority)
+            Assertions.assertEquals(expected[i].start, result[i].start)
+            Assertions.assertEquals(expected[i].finish, result[i].finish)
+        }
+    }
+
+
+    @Test
+    fun findBestPerformanceLis9() {
+        val performance1 = Performance("Pearl Jam", 2, "2018-05-25T00:01:15Z", "2018-05-25T00:03:30Z")
+        val performance2 = Performance("Pearl Jam1", 1, "2018-05-25T00:02:00Z", "2018-05-25T00:10:30Z")
+        val performance4 = Performance("Pearl Jam3", 3, "2018-05-25T00:04:00Z", "2018-05-25T00:05:30Z")
+        val performance3 = Performance("Pearl Jam4", 5, "2018-05-25T00:07:20Z", "2018-05-25T00:09:30Z")
+        val performanceM = Performance("Pearl Jam5", 10, "2018-05-25T00:00:20Z", "2018-05-25T00:49:30Z")
+
+        val list = mutableListOf<Performance>()
+        list.add(performance1)
+        list.add(performance2)
+        list.add(performance4)
+        list.add(performance3)
+        list.add(performanceM)
+
+        val result = findBestPerformanceListService.findBestPerformanceList(list)
+
+        val expected = mutableListOf<Performance>()
+
+        val performance5 = Performance("Pearl Jam5", 10, "2018-05-25T00:00:20Z", "2018-05-25T00:49:30Z")
+
+        expected.add(performance5)
+
+        Assertions.assertEquals(expected.size, result.size)
+
+        for (i in 0 until result.size) {
+            Assertions.assertEquals(expected[i].band, result[i].band)
+            Assertions.assertEquals(expected[i].priority, result[i].priority)
+            Assertions.assertEquals(expected[i].start, result[i].start)
+            Assertions.assertEquals(expected[i].finish, result[i].finish)
+        }
+    }
+
+    @Test
+    fun findBestPerformanceLis10() {
+        val performance1 = Performance("Pearl Jam", 2, "2018-05-25T00:01:15Z", "2018-05-25T00:03:30Z")
+        val performance2 = Performance("Pearl Jam1", 1, "2018-05-25T00:02:00Z", "2018-05-25T00:10:30Z")
+        val performance4 = Performance("Pearl Jam3", 3, "2018-05-25T00:04:00Z", "2018-05-25T00:05:30Z")
+        val performance3 = Performance("Pearl Jam4", 5, "2018-05-25T00:07:20Z", "2018-05-25T00:09:30Z")
+        val performanceM = Performance("Pearl Jam5", 10, "2018-05-25T00:00:20Z", "2018-05-25T00:05:30Z")
+        val performanceM1 = Performance("Pearl Jam6", 11, "2018-05-25T00:04:20Z", "2018-05-25T00:15:30Z")
+
+        val list = mutableListOf<Performance>()
+        list.add(performance1)
+        list.add(performance2)
+        list.add(performance4)
+        list.add(performance3)
+        list.add(performanceM)
+        list.add(performanceM1)
+
+        val result = findBestPerformanceListService.findBestPerformanceList(list)
+
+        val expected = mutableListOf<Performance>()
+
+        val performance5 = Performance("Pearl Jam5", 10, "2018-05-25T00:00:20Z", "2018-05-25T00:04:20Z")
+        val performance6 = Performance("Pearl Jam6", 11, "2018-05-25T00:04:20Z", "2018-05-25T00:15:30Z")
+
+        expected.add(performance5)
+        expected.add(performance6)
+
+        Assertions.assertEquals(expected.size, result.size)
+
+        for (i in 0 until result.size) {
+            Assertions.assertEquals(expected[i].band, result[i].band)
+            Assertions.assertEquals(expected[i].priority, result[i].priority)
+            Assertions.assertEquals(expected[i].start, result[i].start)
+            Assertions.assertEquals(expected[i].finish, result[i].finish)
+        }
+    }
 }
