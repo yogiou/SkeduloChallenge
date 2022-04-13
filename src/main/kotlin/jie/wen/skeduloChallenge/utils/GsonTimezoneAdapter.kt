@@ -28,7 +28,7 @@ class GsonTimezoneAdapter : JsonSerializer<Date?>, JsonDeserializer<Date?> {
     ): Date {
         return try {
             dateFormat.parse(jsonElement.asString)
-        } catch (e: Exception) {
+        } catch (e: JsonParseException) {
             throw JsonParseException(e)
         }
     }

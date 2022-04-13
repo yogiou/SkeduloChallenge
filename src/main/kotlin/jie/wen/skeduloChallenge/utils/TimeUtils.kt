@@ -2,6 +2,7 @@ package jie.wen.skeduloChallenge.utils
 
 import com.google.gson.JsonArray
 import com.google.gson.JsonParser
+import jie.wen.skeduloChallenge.data.Constants.START_TAG
 import java.text.SimpleDateFormat
 import java.time.Instant
 import java.time.ZoneId
@@ -15,16 +16,12 @@ class TimeUtils {
         private var timeZone: String = ""
 
         fun getTimeZoneFromJson(json: String) {
-            if (json.isNotEmpty()) {
+            json.takeIf { it.isNotEmpty() }?.let { jsonString ->
                 try {
-                    val jsonArray: JsonArray = JsonParser.parseString(json).asJsonArray
-                    val time = jsonArray[0].asJsonObject.get("start").asString
+                    val jsonArray: JsonArray = JsonParser.parseString(jsonString).asJsonArray
+                    val time = jsonArray[0].asJsonObject.get(START_TAG).asString
 
-                    timeZone = if (!time.endsWith("Z")) {
-                        time.substring(time.length - 5, time.length - 3)
-                    } else {
-                        ""
-                    }
+                    timeZone = time.takeIf { !it.endsWith("Z") }?.let { time.substring(time.length - 5, time.length - 3) } ?: ""
                 } catch (e: Exception) {
                     println("Can't get time zone")
                 }
@@ -32,29 +29,27 @@ class TimeUtils {
         }
 
         fun getTimeFormat(): String {
-            return if (timeZone.isEmpty()) {
-                "yyyy-MM-dd'T'HH:mm:ss'Z'"
-            } else {
-                "yyyy-MM-dd'T'HH:mm:ssXXX"
+            return when (timeZone.isEmpty()) {
+                true -> "yyyy-MM-dd'T'HH:mm:ss'Z'"
+                else -> "yyyy-MM-dd'T'HH:mm:ssXXX"
             }
         }
 
         fun getTimeZone(): TimeZone {
-            if (timeZone.isNotEmpty()) {
+            return timeZone.takeIf { it.isNotEmpty() }?.let {
                 val now = Instant.now()
                 val targetOffset = ZoneOffset.ofHours(Integer.parseInt(timeZone))
                 val zoneNames = ZoneId.getAvailableZoneIds()
-                for (zoneName in zoneNames) {
+
+                val zoneName = zoneNames.filter { zoneName ->
                     val zoneId = ZoneId.of(zoneName)
                     val rules = zoneId.rules
                     val offset: ZoneOffset = rules.getOffset(now)
-                    if (offset == targetOffset) {
-                        return TimeZone.getTimeZone(zoneId)
-                    }
-                }
-            }
+                    targetOffset == offset
+                }[0]
 
-            return TimeZone.getTimeZone(UTC)
+                TimeZone.getTimeZone(ZoneId.of(zoneName))
+            } ?: TimeZone.getTimeZone(UTC)
         }
 
         fun printTime(date: Date): String {

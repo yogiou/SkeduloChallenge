@@ -18,18 +18,17 @@ class FindBestPerformanceListServiceImpl : FindBestPerformanceListService {
             val current = performanceList.removeAt(0)
 
             // update the incoming performance's start time which overlapped with last performance
-            if (result.isNotEmpty() && result.last().finish < current.finish && current.start < result.last().finish) {
+            result.takeIf { it.isNotEmpty() && it.last().finish < current.finish && current.start < it.last().finish }?.let {
                 val performance = Performance(current.band, current.priority, result.last().finish, current.finish)
                 addPerformance(performanceList, performance)
-            } else {
-                if (performanceList.isNotEmpty()) {
-                    // check if the performance is still ongoing
-                    if (PerformanceUtils.isPerformanceValid(result, current)) {
+            } ?: run {
+                performanceList.takeIf { it.isNotEmpty() }?.let {
+                    result.takeIf { PerformanceUtils.isPerformanceValid(it, current) }?.let {
                         // get the next most recent performance with higher priority which the start time is in the period of the current performance
                         val next: Performance? = findNextPerformance(performanceList, current)
 
                         next?.apply {
-                            if (current.finish > next.finish) {
+                            current.takeIf { it.finish > next.finish }?.let {
                                 // if incoming higher priority performance is overlapped with current but will finish after the incoming one, split and add it to priority queue
                                 val performanceObject = Performance(current.band, current.priority, this.finish, current.finish)
                                 addPerformance(performanceList, performanceObject)
@@ -38,17 +37,12 @@ class FindBestPerformanceListServiceImpl : FindBestPerformanceListService {
                             // update current performance the finish time and go to higher priority performance
                             val performanceToResult = Performance(current.band, current.priority, current.start, this.start)
                             result.add(performanceToResult)
-                        } ?: run {
-                            if (result.isEmpty() || result.last().finish < current.finish) {
-                                result.add(current)
-                            }
+                        } ?: result.takeIf { it.isEmpty() || it.last().finish < current.finish }?.let {
+                            result.add(current)
                         }
                     }
-                } else {
-                    // no more performance in the list, add it in the result directly
-                    if (result.isEmpty() || result.last().finish < current.finish) {
-                        result.add(current)
-                    }
+                } ?: result.takeIf { it.isEmpty() || it.last().finish < current.finish }?.let {
+                    result.add(current)
                 }
             }
         }
@@ -76,6 +70,8 @@ class FindBestPerformanceListServiceImpl : FindBestPerformanceListService {
         var e = -1
 
         while (start <= end) {
+            var run = true
+
             mid = (end - start) / 2 + start
 
             if (subMid == -1) {
@@ -90,66 +86,77 @@ class FindBestPerformanceListServiceImpl : FindBestPerformanceListService {
                 e = end
             }
 
-            if (current.start == performanceList[mid].start) {
-                if (foundEnd == -1) {
-                    while (s <= e) {
-                        subMid = (e - s) / 2 + s
-                        if (subMid == performanceList.size - 1 || current.start < performanceList[subMid + 1].start) {
-                            foundEnd = subMid
+            when {
+                current.start == performanceList[mid].start -> {
+                    when {
+                        foundEnd == -1 -> {
+                            while (s <= e && run) {
+                                subMid = (e - s) / 2 + s
 
-                            subMid = -1
-                            s = -1
-                            e = -1
+                                performanceList.takeIf { subMid == it.size - 1 || current.start < it[subMid + 1].start }?.let {
+                                    foundEnd = subMid
 
-                            break
-                        } else {
-                            s = subMid + 1
+                                    subMid = -1
+                                    s = -1
+                                    e = -1
+                                    run = false
+                                } ?: run {
+                                    s = subMid + 1
+                                }
+                            }
                         }
-                    }
-                } else if (foundStart == -1) {
-                    while (s <= e) {
-                        subMid = (e - s) / 2 + s
-                        if (subMid == 0 || current.start > performanceList[subMid - 1].start) {
-                            foundStart = subMid
-                            break
-                        } else {
-                            e = subMid - 1
+                        foundStart == -1 -> {
+                            while (s <= e && run) {
+                                subMid = (e - s) / 2 + s
+
+                                performanceList.takeIf {subMid == 0 || current.start > it[subMid - 1].start}?.let {
+                                    foundStart = subMid
+                                    run = false
+                                } ?: run {
+                                    e = subMid - 1
+                                }
+                            }
                         }
+                        else -> break
                     }
-                } else {
-                    break
                 }
-            } else if (mid > 0 && current.start < performanceList[mid].start && current.start > performanceList[mid - 1].start) {
-                performanceList.add(mid, current)
-                return
-            } else if (mid == 0) {
-                if (current.start < performanceList[mid].start) {
+
+                mid > 0 && current.start < performanceList[mid].start && current.start > performanceList[mid - 1].start -> {
                     performanceList.add(mid, current)
                     return
-                } else {
-                    if (start == end) {
+                }
+
+                mid == 0 -> {
+                    performanceList[mid].takeIf { current.start < it.start }?.let {
+                        performanceList.add(mid, current)
+                        return
+                    } ?: run {
+                        start.takeIf { it == end }?.let {
+                            performanceList.add(mid + 1, current)
+                            return
+                        } ?: run {
+                            start = mid + 1
+                        }
+                    }
+                }
+
+                mid == performanceList.size - 1 -> {
+                    performanceList[mid].takeIf { current.start < it.start }?.let {
+                        start.takeIf { it == end }?.let {
+                            performanceList.add(mid , current)
+                            return
+                        } ?: run {
+                            end = mid - 1
+                        }
+                    } ?: run {
                         performanceList.add(mid + 1, current)
                         return
-                    } else {
-                        start = mid + 1
                     }
                 }
-            } else if (mid == performanceList.size - 1) {
-                if (current.start < performanceList[mid].start) {
-                    if (start == end) {
-                        performanceList.add(mid , current)
-                        return
-                    } else {
-                        end = mid - 1
-                    }
-                } else {
-                    performanceList.add(mid + 1, current)
-                    return
-                }
-            } else if (current.start > performanceList[mid].start) {
-                start = mid + 1
-            } else {
-                end = mid - 1
+
+                current.start > performanceList[mid].start -> start = mid + 1
+
+                else -> end = mid - 1
             }
         }
 
@@ -158,29 +165,34 @@ class FindBestPerformanceListServiceImpl : FindBestPerformanceListService {
         while (start in 0..end) {
             mid = (end - start) / 2 + start
 
-            if (mid == foundStart) {
-                if (current.priority >= performanceList[mid].priority) {
-                    performanceList.add(mid, current)
-                } else {
-                    performanceList.add(mid + 1, current)
+            when {
+                mid == foundStart -> {
+                    performanceList[mid].takeIf { current.priority >= it.priority }?.let {
+                        performanceList.add(mid, current)
+                    } ?: run {
+                        performanceList.add(mid + 1, current)
+                    }
+
+                    return
                 }
 
-                return
-            } else if (mid == foundEnd) {
-                if (current.priority >= performanceList[mid].priority) {
-                    performanceList.add(mid, current)
-                } else {
-                    performanceList.add(mid + 1, current)
+                mid == foundEnd -> {
+                    performanceList[mid].takeIf { current.priority >= it.priority }?.let {
+                        performanceList.add(mid, current)
+                    } ?: run {
+                        performanceList.add(mid + 1, current)
+                    }
+
+                    return
                 }
 
-                return
-            } else if (performanceList[mid - 1].priority >= current.priority && performanceList[mid].priority <= current.priority) {
-                performanceList.add(mid, current)
-                return
-            } else if (performanceList[mid].priority < current.priority) {
-                end = mid - 1
-            } else {
-                start = mid + 1
+                performanceList[mid - 1].priority >= current.priority && performanceList[mid].priority <= current.priority -> {
+                    performanceList.add(mid, current)
+                    return
+                }
+
+                performanceList[mid].priority < current.priority -> end = mid - 1
+                else -> start = mid + 1
             }
         }
     }
@@ -192,56 +204,56 @@ class FindBestPerformanceListServiceImpl : FindBestPerformanceListService {
         var start = 0
         var end = performanceList.size - 1
         var mid: Int
+        var run = true
 
-        while (start <= end) {
+        while (start <= end && run) {
             mid = (end - start) / 2 + start
 
-            if (mid == 0) {
-                if (performanceList[mid].start >= current.start && performanceList[mid].start <= current.finish && current.priority < performanceList[mid].priority) {
-                    result = performanceList[mid]
+            when {
+                mid == 0 -> {
+                    performanceList[mid].takeIf { it.start >= current.start && it.start <= current.finish && current.priority < it.priority }?.let {
+                        result = performanceList[mid]
+                        run = false
+                    } ?: run {
+                        performanceList = performanceList.subList(1, performanceList.size)
+                        start = 0
+                        end = performanceList.size - 1
+                    }
+                }
+
+                mid == performanceList.size - 1 -> {
+                    performanceList[mid].takeIf { it.start >= current.start && it.start <= current.finish && current.priority < it.priority}?.let {
+                        result = performanceList[mid]
+                    }
+
                     break
-                } else {
-                    performanceList = performanceList.subList(1, performanceList.size)
+                }
+
+                current.priority < performanceList[mid].priority
+                        && performanceList[mid - 1].start == performanceList[0].start
+                        && performanceList[mid].start > performanceList[mid - 1].start
+                        && performanceList[mid].start <= performanceList[mid + 1].start
+                        && performanceList[0].priority <= current.priority -> {
+                    performanceList[mid].takeIf { it.start >= current.start && it.start <= current.finish }?.let {
+                        result = performanceList[mid]
+                    }
+
+                    break
+                }
+                performanceList[mid - 1].start == performanceList[mid].start -> {
+                    start = mid + 1
+                }
+                current.priority >= performanceList[mid].priority -> {
+                    performanceList = performanceList.subList(mid, performanceList.size)
                     start = 0
                     end = performanceList.size - 1
                 }
-            } else if (mid == performanceList.size - 1) {
-                if (performanceList[mid].start >= current.start && performanceList[mid].start <= current.finish && current.priority < performanceList[mid].priority) {
-                    result = performanceList[mid]
+                else -> {
+                    end = mid - 1
                 }
-
-                break
-            } else if (current.priority < performanceList[mid].priority
-                && performanceList[mid - 1].start == performanceList[0].start
-                && performanceList[mid].start > performanceList[mid - 1].start
-                && performanceList[mid].start <= performanceList[mid + 1].start
-                && performanceList[0].priority <= current.priority
-            ) {
-                if (performanceList[mid].start >= current.start && performanceList[mid].start <= current.finish) {
-                    result = performanceList[mid]
-                }
-
-                break
-            } else if (performanceList[mid - 1].start == performanceList[mid].start) {
-                start = mid + 1
-            } else if (current.priority >= performanceList[mid].priority) {
-                performanceList = performanceList.subList(mid, performanceList.size)
-                start = 0
-                end = performanceList.size - 1
-            } else {
-                end = mid - 1
             }
         }
 
         return result
-    }
-
-    // for debugging
-    override fun show(performanceList: MutableList<Performance>) {
-        for (performance in performanceList) {
-            println("${performance.band} ${TimeUtils.printTime(performance.start)} ${TimeUtils.printTime(performance.finish)} ${performance.priority}")
-        }
-
-        println()
     }
 }

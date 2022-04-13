@@ -13,16 +13,13 @@ import java.io.FileNotFoundException
 class ReadInputJsonFileServiceImpl : ReadInputJsonFileService {
     // read the input file
     override fun readJsonFile(path: String): MutableList<Performance> {
-
         val jsonFile = File(path)
 
-        if (jsonFile.exists()) {
+        jsonFile.takeIf { it.exists() }?.let {
             val json = jsonFile.readText(Charsets.UTF_8)
             TimeUtils.getTimeZoneFromJson(json)
             return parseJson(json)
-        }
-
-        throw FileNotFoundException()
+        } ?: throw FileNotFoundException()
     }
 
     // parse the json string to json object by Gson

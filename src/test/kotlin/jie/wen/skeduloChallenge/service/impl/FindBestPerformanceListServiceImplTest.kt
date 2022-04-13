@@ -3,6 +3,7 @@ package jie.wen.skeduloChallenge.service.impl
 import jie.wen.skeduloChallenge.data.Constants.SHOW_TEST_RESULT
 import jie.wen.skeduloChallenge.data.Performance
 import jie.wen.skeduloChallenge.service.FindBestPerformanceListService
+import jie.wen.skeduloChallenge.utils.PerformanceUtils
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -15,7 +16,6 @@ import java.util.*
 internal class FindBestPerformanceListServiceImplTest {
     @Autowired
     private lateinit var findBestPerformanceListService: FindBestPerformanceListService
-
 
     @Test
     fun findBestPerformanceList() {
@@ -42,9 +42,9 @@ internal class FindBestPerformanceListServiceImplTest {
 
         if (SHOW_TEST_RESULT) {
             a.sort()
-            findBestPerformanceListService.show(a)
-            findBestPerformanceListService.show(expected)
-            findBestPerformanceListService.show(result)
+            PerformanceUtils.show(a)
+            PerformanceUtils.show(expected)
+            PerformanceUtils.show(result)
         }
 
         Assertions.assertEquals(expected.size, result.size)
@@ -82,9 +82,9 @@ internal class FindBestPerformanceListServiceImplTest {
 
         if (SHOW_TEST_RESULT) {
             a.sort()
-            findBestPerformanceListService.show(a)
-            findBestPerformanceListService.show(expected)
-            findBestPerformanceListService.show(result)
+            PerformanceUtils.show(a)
+            PerformanceUtils.show(expected)
+            PerformanceUtils.show(result)
         }
 
         Assertions.assertEquals(expected.size, result.size)
@@ -126,9 +126,9 @@ internal class FindBestPerformanceListServiceImplTest {
 
         if (SHOW_TEST_RESULT) {
             a.sort()
-            findBestPerformanceListService.show(a)
-            findBestPerformanceListService.show(expected)
-            findBestPerformanceListService.show(result)
+            PerformanceUtils.show(a)
+            PerformanceUtils.show(expected)
+            PerformanceUtils.show(result)
         }
 
         Assertions.assertEquals(expected.size, result.size)
@@ -178,9 +178,9 @@ internal class FindBestPerformanceListServiceImplTest {
 
         if (SHOW_TEST_RESULT) {
             a.sort()
-            findBestPerformanceListService.show(a)
-            findBestPerformanceListService.show(expected)
-            findBestPerformanceListService.show(result)
+            PerformanceUtils.show(a)
+            PerformanceUtils.show(expected)
+            PerformanceUtils.show(result)
         }
 
         Assertions.assertEquals(expected.size, result.size)
@@ -222,9 +222,9 @@ internal class FindBestPerformanceListServiceImplTest {
 
         if (SHOW_TEST_RESULT) {
             a.sort()
-            findBestPerformanceListService.show(a)
-            findBestPerformanceListService.show(expected)
-            findBestPerformanceListService.show(result)
+            PerformanceUtils.show(a)
+            PerformanceUtils.show(expected)
+            PerformanceUtils.show(result)
         }
 
         Assertions.assertEquals(expected.size, result.size)
@@ -266,9 +266,9 @@ internal class FindBestPerformanceListServiceImplTest {
 
         if (SHOW_TEST_RESULT) {
             a.sort()
-            findBestPerformanceListService.show(a)
-            findBestPerformanceListService.show(expected)
-            findBestPerformanceListService.show(result)
+            PerformanceUtils.show(a)
+            PerformanceUtils.show(expected)
+            PerformanceUtils.show(result)
         }
 
         Assertions.assertEquals(expected.size, result.size)
@@ -308,9 +308,9 @@ internal class FindBestPerformanceListServiceImplTest {
 
         if (SHOW_TEST_RESULT) {
             a.sort()
-            findBestPerformanceListService.show(a)
-            findBestPerformanceListService.show(expected)
-            findBestPerformanceListService.show(result)
+            PerformanceUtils.show(a)
+            PerformanceUtils.show(expected)
+            PerformanceUtils.show(result)
         }
 
         Assertions.assertEquals(expected.size, result.size)
@@ -352,9 +352,9 @@ internal class FindBestPerformanceListServiceImplTest {
 
         if (SHOW_TEST_RESULT) {
             a.sort()
-            findBestPerformanceListService.show(a)
-            findBestPerformanceListService.show(expected)
-            findBestPerformanceListService.show(result)
+            PerformanceUtils.show(a)
+            PerformanceUtils.show(expected)
+            PerformanceUtils.show(result)
         }
 
         Assertions.assertEquals(expected.size, result.size)
@@ -402,9 +402,9 @@ internal class FindBestPerformanceListServiceImplTest {
 
         if (SHOW_TEST_RESULT) {
             a.sort()
-            findBestPerformanceListService.show(a)
-            findBestPerformanceListService.show(expected)
-            findBestPerformanceListService.show(result)
+            PerformanceUtils.show(a)
+            PerformanceUtils.show(expected)
+            PerformanceUtils.show(result)
         }
 
         Assertions.assertEquals(expected.size, result.size)
@@ -448,9 +448,9 @@ internal class FindBestPerformanceListServiceImplTest {
 
         if (SHOW_TEST_RESULT) {
             a.sort()
-            findBestPerformanceListService.show(a)
-            findBestPerformanceListService.show(expected)
-            findBestPerformanceListService.show(result)
+            PerformanceUtils.show(a)
+            PerformanceUtils.show(expected)
+            PerformanceUtils.show(result)
         }
 
         Assertions.assertEquals(expected.size, result.size)
@@ -498,9 +498,9 @@ internal class FindBestPerformanceListServiceImplTest {
 
         if (SHOW_TEST_RESULT) {
             a.sort()
-            findBestPerformanceListService.show(a)
-            findBestPerformanceListService.show(expected)
-            findBestPerformanceListService.show(result)
+            PerformanceUtils.show(a)
+            PerformanceUtils.show(expected)
+            PerformanceUtils.show(result)
         }
 
         Assertions.assertEquals(expected.size, result.size)
@@ -546,9 +546,9 @@ internal class FindBestPerformanceListServiceImplTest {
 
         if (SHOW_TEST_RESULT) {
             a.sort()
-            findBestPerformanceListService.show(a)
-            findBestPerformanceListService.show(expected)
-            findBestPerformanceListService.show(result)
+            PerformanceUtils.show(a)
+            PerformanceUtils.show(expected)
+            PerformanceUtils.show(result)
         }
 
         Assertions.assertEquals(expected.size, result.size)
@@ -592,9 +592,9 @@ internal class FindBestPerformanceListServiceImplTest {
 
         if (SHOW_TEST_RESULT) {
             a.sort()
-            findBestPerformanceListService.show(a)
-            findBestPerformanceListService.show(expected)
-            findBestPerformanceListService.show(result)
+            PerformanceUtils.show(a)
+            PerformanceUtils.show(expected)
+            PerformanceUtils.show(result)
         }
 
         Assertions.assertEquals(expected.size, result.size)
@@ -646,9 +646,9 @@ internal class FindBestPerformanceListServiceImplTest {
 
         if (SHOW_TEST_RESULT) {
             a.sort()
-            findBestPerformanceListService.show(a)
-            findBestPerformanceListService.show(expected)
-            findBestPerformanceListService.show(result)
+            PerformanceUtils.show(a)
+            PerformanceUtils.show(expected)
+            PerformanceUtils.show(result)
         }
 
         Assertions.assertEquals(expected.size, result.size)
@@ -682,7 +682,7 @@ internal class FindBestPerformanceListServiceImplTest {
 
         val result = findBestPerformanceListService.findBestPerformanceList(list)
 
-        findBestPerformanceListService.show(result)
+        PerformanceUtils.show(result)
 
         val expected = mutableListOf<Performance>()
 
@@ -692,9 +692,9 @@ internal class FindBestPerformanceListServiceImplTest {
 
         if (SHOW_TEST_RESULT) {
             a.sort()
-            findBestPerformanceListService.show(a)
-            findBestPerformanceListService.show(expected)
-            findBestPerformanceListService.show(result)
+            PerformanceUtils.show(a)
+            PerformanceUtils.show(expected)
+            PerformanceUtils.show(result)
         }
 
         Assertions.assertEquals(expected.size, result.size)
@@ -738,9 +738,9 @@ internal class FindBestPerformanceListServiceImplTest {
 
         if (SHOW_TEST_RESULT) {
             a.sort()
-            findBestPerformanceListService.show(a)
-            findBestPerformanceListService.show(expected)
-            findBestPerformanceListService.show(result)
+            PerformanceUtils.show(a)
+            PerformanceUtils.show(expected)
+            PerformanceUtils.show(result)
         }
 
         Assertions.assertEquals(expected.size, result.size)
@@ -770,8 +770,8 @@ internal class FindBestPerformanceListServiceImplTest {
         findBestPerformanceListService.findBestPerformanceList(list)
         val end = System.currentTimeMillis()
         val time = (end - start).toFloat() / 1000F
-        print("processing time: $time s")
-//        Assertions.assertTrue(time <= 5)
+        println("findBestPerformanceListPerformance processing time: $time s")
+        Assertions.assertTrue(time <= 5)
     }
 
     @Test
@@ -846,9 +846,9 @@ internal class FindBestPerformanceListServiceImplTest {
 
         if (SHOW_TEST_RESULT) {
             a.sort()
-            findBestPerformanceListService.show(a)
-            findBestPerformanceListService.show(expected)
-            findBestPerformanceListService.show(list)
+            PerformanceUtils.show(a)
+            PerformanceUtils.show(expected)
+            PerformanceUtils.show(list)
         }
 
         Assertions.assertEquals(expected.size, list.size)
@@ -972,14 +972,14 @@ internal class FindBestPerformanceListServiceImplTest {
 
         list.sort()
 
-        findBestPerformanceListService.show(list)
+        PerformanceUtils.show(list)
 
         val result = findBestPerformanceListService.findNextPerformance(list, performanceME1)
 
         result?.let {
             val a = mutableListOf<Performance>()
             a.add(it)
-            findBestPerformanceListService.show(a)
+            PerformanceUtils.show(a)
             Assertions.assertTrue(it.band == performance2E1.band && it.start == performance2E1.start && it.finish == performance2E1.finish && it.priority == performance2E1.priority)
         }
     }
