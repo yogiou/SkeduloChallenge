@@ -1,5 +1,11 @@
 https://github.com/Skedulo/backend-tech-test 
 
+**0.0.2-RELEASE update**
+
+1. Use Date for start and finish instead of String 
+2. Use sorted array list instead of priority queue, use binary search instead of linear search to find next performance
+3. improve the performance
+
 **How to run? (Assume it is Linux or Mac system)**
 1. Install Java 11 or above
 2. Install Maven 3.8.1 or above

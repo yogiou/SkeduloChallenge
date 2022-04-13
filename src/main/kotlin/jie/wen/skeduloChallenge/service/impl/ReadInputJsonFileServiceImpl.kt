@@ -4,6 +4,7 @@ import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import jie.wen.skeduloChallenge.data.Performance
 import jie.wen.skeduloChallenge.service.ReadInputJsonFileService
+import jie.wen.skeduloChallenge.utils.TimeUtils
 import org.springframework.stereotype.Service
 import java.io.File
 import java.io.FileNotFoundException
@@ -17,6 +18,7 @@ class ReadInputJsonFileServiceImpl : ReadInputJsonFileService {
 
         if (jsonFile.exists()) {
             val json = jsonFile.readText(Charsets.UTF_8)
+            TimeUtils.getTimeZoneFromJson(json)
             return parseJson(json)
         }
 

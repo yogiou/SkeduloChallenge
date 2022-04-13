@@ -23,7 +23,3 @@ class SkeduloChallengeApplication: CommandLineRunner {
 fun main(args: Array<String>) {
 	runApplication<SkeduloChallengeApplication>(*args)
 }
-
-
-
-
