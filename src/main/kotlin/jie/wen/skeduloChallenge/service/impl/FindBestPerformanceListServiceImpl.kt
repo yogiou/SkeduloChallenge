@@ -3,7 +3,6 @@ package jie.wen.skeduloChallenge.service.impl
 import jie.wen.skeduloChallenge.data.Performance
 import jie.wen.skeduloChallenge.service.FindBestPerformanceListService
 import jie.wen.skeduloChallenge.utils.PerformanceUtils
-import jie.wen.skeduloChallenge.utils.TimeUtils
 import org.springframework.stereotype.Service
 
 @Service
@@ -87,7 +86,7 @@ class FindBestPerformanceListServiceImpl : FindBestPerformanceListService {
             }
 
             when {
-                current.start == performanceList[mid].start -> {
+                sameStartTime(current, mid, performanceList) -> {
                     when {
                         foundEnd == -1 -> {
                             while (s <= e && run) {
@@ -121,12 +120,12 @@ class FindBestPerformanceListServiceImpl : FindBestPerformanceListService {
                     }
                 }
 
-                mid > 0 && current.start < performanceList[mid].start && current.start > performanceList[mid - 1].start -> {
+                foundPerformanceToAddByStartTime(mid, current, performanceList) -> {
                     performanceList.add(mid, current)
                     return
                 }
 
-                mid == 0 -> {
+                toStartPos(mid, 0) -> {
                     performanceList[mid].takeIf { current.start < it.start }?.let {
                         performanceList.add(mid, current)
                         return
@@ -140,7 +139,7 @@ class FindBestPerformanceListServiceImpl : FindBestPerformanceListService {
                     }
                 }
 
-                mid == performanceList.size - 1 -> {
+                toEndPos(mid, performanceList.size - 1) -> {
                     performanceList[mid].takeIf { current.start < it.start }?.let {
                         start.takeIf { it == end }?.let {
                             performanceList.add(mid , current)
@@ -166,7 +165,7 @@ class FindBestPerformanceListServiceImpl : FindBestPerformanceListService {
             mid = (end - start) / 2 + start
 
             when {
-                mid == foundStart -> {
+                toStartPos(mid, foundStart) -> {
                     performanceList[mid].takeIf { current.priority >= it.priority }?.let {
                         performanceList.add(mid, current)
                     } ?: run {
@@ -176,7 +175,7 @@ class FindBestPerformanceListServiceImpl : FindBestPerformanceListService {
                     return
                 }
 
-                mid == foundEnd -> {
+                toEndPos(mid, foundEnd) -> {
                     performanceList[mid].takeIf { current.priority >= it.priority }?.let {
                         performanceList.add(mid, current)
                     } ?: run {
@@ -186,15 +185,31 @@ class FindBestPerformanceListServiceImpl : FindBestPerformanceListService {
                     return
                 }
 
-                performanceList[mid - 1].priority >= current.priority && performanceList[mid].priority <= current.priority -> {
+                foundPerformanceToAddByPriority(mid, current, performanceList) -> {
                     performanceList.add(mid, current)
                     return
                 }
 
-                performanceList[mid].priority < current.priority -> end = mid - 1
+                lowerPriorityThanTarget(mid, current, performanceList) -> end = mid - 1
                 else -> start = mid + 1
             }
         }
+    }
+
+    private fun sameStartTime(current: Performance, found: Int, performanceList: MutableList<Performance>): Boolean {
+        return current.start == performanceList[found].start
+    }
+
+    private fun foundPerformanceToAddByStartTime(found: Int, current: Performance, performanceList: MutableList<Performance>): Boolean {
+        return found > 0 && current.start < performanceList[found].start && current.start > performanceList[found - 1].start
+    }
+
+    private fun foundPerformanceToAddByPriority(found: Int, current: Performance, performanceList: MutableList<Performance>): Boolean {
+        return performanceList[found - 1].priority >= current.priority && performanceList[found].priority <= current.priority
+    }
+
+    private fun lowerPriorityThanTarget(found: Int, current: Performance, performanceList: MutableList<Performance>): Boolean {
+        return performanceList[found].priority < current.priority
     }
 
     // find the next performance with higher priority within current performance period (search by binary search)
@@ -210,7 +225,7 @@ class FindBestPerformanceListServiceImpl : FindBestPerformanceListService {
             mid = (end - start) / 2 + start
 
             when {
-                mid == 0 -> {
+                toStartPos(mid, 0) -> {
                     performanceList[mid].takeIf { it.start >= current.start && it.start <= current.finish && current.priority < it.priority }?.let {
                         result = performanceList[mid]
                         run = false
@@ -221,7 +236,7 @@ class FindBestPerformanceListServiceImpl : FindBestPerformanceListService {
                     }
                 }
 
-                mid == performanceList.size - 1 -> {
+                toEndPos(mid, performanceList.size - 1) -> {
                     performanceList[mid].takeIf { it.start >= current.start && it.start <= current.finish && current.priority < it.priority}?.let {
                         result = performanceList[mid]
                     }
@@ -229,31 +244,52 @@ class FindBestPerformanceListServiceImpl : FindBestPerformanceListService {
                     break
                 }
 
-                current.priority < performanceList[mid].priority
-                        && performanceList[mid - 1].start == performanceList[0].start
-                        && performanceList[mid].start > performanceList[mid - 1].start
-                        && performanceList[mid].start <= performanceList[mid + 1].start
-                        && performanceList[0].priority <= current.priority -> {
+                foundPerformance(current, mid, performanceList) -> {
                     performanceList[mid].takeIf { it.start >= current.start && it.start <= current.finish }?.let {
                         result = performanceList[mid]
                     }
 
                     break
                 }
-                performanceList[mid - 1].start == performanceList[mid].start -> {
+
+                sameAsPreviousPerformanceStart(mid, performanceList) -> {
                     start = mid + 1
                 }
-                current.priority >= performanceList[mid].priority -> {
+
+                lowerPriorityThenTargetPerformance(current, mid, performanceList) -> {
                     performanceList = performanceList.subList(mid, performanceList.size)
                     start = 0
                     end = performanceList.size - 1
                 }
-                else -> {
-                    end = mid - 1
-                }
+
+                else -> end = mid - 1
             }
         }
 
         return result
+    }
+
+    private fun foundPerformance(current: Performance, foundPos: Int, performanceList: MutableList<Performance>): Boolean {
+        return current.priority < performanceList[foundPos].priority
+                && performanceList[foundPos - 1].start == performanceList[0].start
+                && performanceList[foundPos].start > performanceList[foundPos - 1].start
+                && performanceList[foundPos].start <= performanceList[foundPos + 1].start
+                && performanceList[0].priority <= current.priority
+    }
+
+    private fun toStartPos(foundPos: Int, start: Int): Boolean {
+        return foundPos == start
+    }
+
+    private fun toEndPos(foundPos: Int, end: Int): Boolean {
+        return foundPos == end
+    }
+
+    private fun sameAsPreviousPerformanceStart(foundPos: Int, performanceList: MutableList<Performance>): Boolean {
+        return performanceList[foundPos - 1].start == performanceList[foundPos].start
+    }
+
+    private fun lowerPriorityThenTargetPerformance(current: Performance, foundPos: Int, performanceList: MutableList<Performance>): Boolean {
+        return current.priority >= performanceList[foundPos].priority
     }
 }
